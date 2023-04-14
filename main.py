@@ -1,54 +1,65 @@
 import os
 
-def add_task(task):
-    with open("tasks.txt", "a") as file:
-        file.write(task + "\n")
-    print("\n" + "------------------------------------" + "\n")
+def load_tasks():
+    tasks = []
+    if os.path.exists("tasks.txt"):
+        with open("tasks.txt", "r") as file:
+            tasks = file.readlines()
+    return tasks
 
-
-def remove_task(task):
-    with open("tasks.txt", "r") as file:
-        tasks = file.readlines()
+def save_tasks(tasks):
     with open("tasks.txt", "w") as file:
-        for line in tasks:
-            if line.strip("\n") != task:
-                file.write(line)
-    print("\n" + "------------------------------------" + "\n")
+        file.writelines(tasks)
 
+def add_task(task):
+    tasks = load_tasks()
+    tasks.append(task + "\n")
+    save_tasks(tasks)
+    print("Task added: {}".format(task))
 
-def show_tasks():
-    if not os.path.exists("tasks.txt"):
-        print("\n" + "No tasks found")
-        print("\n"+"------------------------------------"+"\n")
+def remove_task(task_number):
+    tasks = load_tasks()
+    if len(tasks) >= task_number:
+        task = tasks.pop(task_number - 1)
+        save_tasks(tasks)
+        print("Task removed: {}".format(task.strip()))
+    else:
+        print("Invalid task number.")
 
-        return
-    with open("tasks.txt", "r") as file:
-        tasks = file.readlines()
-    for task in tasks:
-        print("\n" + task.strip("\n"))
-    print("\n"+"------------------------------------"+"\n")
+def view_tasks():
+    tasks = load_tasks()
+    if tasks:
+        print("Tasks:")
+        for i, task in enumerate(tasks, 1):
+            print("{} - {}".format(i, task.strip()))
+    else:
+        print("No tasks found.")
+
+def exit_program():
+    print("Exiting...")
+    exit(0)
 
 def main():
     while True:
-        print("\t" + "1. Add task")
-        print("\t" + "2. Remove task")
-        print("\t" + "3. Show tasks")
-        print("\t" + "4. Exit")
+        print("\n")
+        print("To-Do List")
+        print("1 - Add task")
+        print("2 - Remove task")
+        print("3 - View tasks")
+        print("4 - Exit")
         choice = input("Enter your choice: ")
         if choice == "1":
             task = input("Enter task: ")
             add_task(task)
         elif choice == "2":
-            task = input("Enter task: ")
-            remove_task(task)
+            task_number = int(input("Enter task number: "))
+            remove_task(task_number)
         elif choice == "3":
-            show_tasks()
+            view_tasks()
         elif choice == "4":
-            break
+            exit_program()
         else:
-            print("Invalid choice")
-            print("\n" + "------------------------------------" + "\n")
-
+            print("Invalid choice. Please try again.")
 
 if __name__ == "__main__":
     main()

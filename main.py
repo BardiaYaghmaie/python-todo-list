@@ -1,5 +1,6 @@
 import os
 
+
 def load_tasks():
     tasks = []
     if os.path.exists("tasks.txt"):
@@ -7,37 +8,43 @@ def load_tasks():
             tasks = file.readlines()
     return tasks
 
-def save_tasks(tasks):
+
+def save_tasks(tasks: list):
     with open("tasks.txt", "w") as file:
         file.writelines(tasks)
 
-def add_task(task):
+
+def add_task(task: list):
     tasks = load_tasks()
     tasks.append(task + "\n")
     save_tasks(tasks)
-    print("Task added: {}".format(task))
+    print(f"Task added: {task}")
+
 
 def remove_task(task_number):
     tasks = load_tasks()
     if len(tasks) >= task_number:
         task = tasks.pop(task_number - 1)
         save_tasks(tasks)
-        print("Task removed: {}".format(task.strip()))
+        print(f"Task removed: {task.strip()}")
     else:
         print("Invalid task number.")
+
 
 def view_tasks():
     tasks = load_tasks()
     if tasks:
         print("Tasks:")
         for i, task in enumerate(tasks, 1):
-            print("{} - {}".format(i, task.strip()))
+            print(f"{i} - {task.strip()}")
     else:
         print("No tasks found.")
+
 
 def exit_program():
     print("Exiting...")
     exit(0)
+
 
 def main():
     while True:
@@ -60,6 +67,7 @@ def main():
             exit_program()
         else:
             print("Invalid choice. Please try again.")
+
 
 if __name__ == "__main__":
     main()
